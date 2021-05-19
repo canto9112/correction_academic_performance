@@ -71,18 +71,18 @@ def main():
     arguments = get_arguments()
 
     name = arguments['name'].capitalize()
-    lastname = arguments['lastname'].capitalize()
+    last_name = arguments['lastname'].capitalize()
     subject = arguments['subject'].capitalize()
 
     try:
-        schookid_name = get_name(name, lastname)
+        schookid_name = get_name(name, last_name)
         fix_marks(schookid_name)
         remove_chastisements(schookid_name)
         create_commendation(schookid_name, subject)
     except Schoolkid.MultipleObjectsReturned:
-        print(f'Учеников с именем {name} {lastname} найдено больше одного!')
+        print(f'Учеников с именем {name} {last_name} найдено больше одного!')
     except Schoolkid.DoesNotExist:
-        print(f'Учеников с именем {name} {lastname} не найдено!')
+        print(f'Учеников с именем {name} {last_name} не найдено!')
     except AttributeError:
         print('Вы допустили опечатку в названии предмета!')
 
