@@ -1,7 +1,6 @@
 import os
 
 import django
-from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "project.settings")
 django.setup()
@@ -80,10 +79,10 @@ def main():
         fix_marks(schookid_name)
         remove_chastisements(schookid_name)
         create_commendation(schookid_name, subject)
-    except MultipleObjectsReturned:
-        print(f'Учеников с именем {name} найдено больше одного!')
-    except ObjectDoesNotExist:
-        print(f'Учеников с именем {name} не найдено!')
+    except Schoolkid.MultipleObjectsReturned:
+        print(f'Учеников с именем {name} {lastname} найдено больше одного!')
+    except Schoolkid.DoesNotExist:
+        print(f'Учеников с именем {name} {lastname} не найдено!')
     except AttributeError:
         print('Вы допустили опечатку в названии предмета!')
 
