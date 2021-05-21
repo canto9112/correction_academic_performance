@@ -44,17 +44,15 @@ def create_commendation(schoolkid, subject):
     group_letter = schoolkid.group_letter
     lessons = Lesson.objects.all()
     kid_lessons = lessons.filter(year_of_study=year_of_study, group_letter=group_letter)
-    lesson = kid_lessons.filter(subject__title=subject).first()
+    lesson = kid_lessons.filter(subject__title=subject).get()
 
     random_commendation = get_random_commendation()
-    if lesson:
-        Commendation.objects.create(text=random_commendation,
-                                    created=lesson.date,
-                                    schoolkid=schoolkid,
-                                    subject=lesson.subject,
-                                    teacher=lesson.teacher)
-    else:
-        return lesson
+
+    Commendation.objects.create(text=random_commendation,
+                                created=lesson.date,
+                                schoolkid=schoolkid,
+                                subject=lesson.subject,
+                                teacher=lesson.teacher)
 
 
 def get_arguments():
@@ -66,7 +64,7 @@ def get_arguments():
 
     args = parser.parse_args()
     return {'name': args.name,
-            'last_name': args.lastname,
+            'last_name': args.last_name,
             'subject': args.subject}
 
 
