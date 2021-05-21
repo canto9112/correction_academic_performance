@@ -10,8 +10,8 @@ import random
 import argparse
 
 
-def get_name(name, lastname):
-    schoolkid_name = Schoolkid.objects.get(full_name__contains=f'{name} {lastname}')
+def get_schoolkid_name(name, last_name):
+    schoolkid_name = Schoolkid.objects.get(full_name__contains=f'{name} {last_name}')
     return schoolkid_name
 
 
@@ -75,7 +75,7 @@ def main():
     subject = arguments['subject'].capitalize()
 
     try:
-        schookid_name = get_name(name, last_name)
+        schookid_name = get_schoolkid_name(name, last_name)
         fix_marks(schookid_name)
         remove_chastisements(schookid_name)
         create_commendation(schookid_name, subject)
