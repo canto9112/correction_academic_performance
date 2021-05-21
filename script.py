@@ -10,7 +10,7 @@ import random
 import argparse
 
 
-def get_schoolkid_name(name, last_name):
+def get_schoolkid(name, last_name):
     schoolkid_name = Schoolkid.objects.get(full_name__contains=f'{name} {last_name}')
     return schoolkid_name
 
@@ -75,10 +75,10 @@ def main():
     subject = arguments['subject'].capitalize()
 
     try:
-        schookid_name = get_schoolkid_name(name, last_name)
-        fix_marks(schookid_name)
-        remove_chastisements(schookid_name)
-        create_commendation(schookid_name, subject)
+        schookid = get_schoolkid(name, last_name)
+        fix_marks(schookid)
+        remove_chastisements(schookid)
+        create_commendation(schookid, subject)
     except Schoolkid.MultipleObjectsReturned:
         print(f'Учеников с именем {name} {last_name} найдено больше одного!')
     except Schoolkid.DoesNotExist:
