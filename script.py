@@ -39,31 +39,34 @@ def get_random_commendation():
     return random.choice(commendation)
 
 
-def create_commendation(schookid_name, subject):
-    year_of_study = schookid_name.year_of_study
-    group_letter = schookid_name.group_letter
+def create_commendation(schoolkid, subject):
+    year_of_study = schoolkid.year_of_study
+    group_letter = schoolkid.group_letter
     lessons = Lesson.objects.all()
     kid_lessons = lessons.filter(year_of_study=year_of_study, group_letter=group_letter)
     lesson = kid_lessons.filter(subject__title=subject).first()
 
     random_commendation = get_random_commendation()
-    Commendation.objects.create(text=random_commendation,
-                                created=lesson.date,
-                                schoolkid=schookid_name,
-                                subject=lesson.subject,
-                                teacher=lesson.teacher)
+    if lesson:
+        Commendation.objects.create(text=random_commendation,
+                                    created=lesson.date,
+                                    schoolkid=schoolkid,
+                                    subject=lesson.subject,
+                                    teacher=lesson.teacher)
+    else:
+        return lesson
 
 
 def get_arguments():
     parser = argparse.ArgumentParser(description='Скрипт исправляет плохие оценкки и замечания учителей')
 
     parser.add_argument('name', help='Имя ученика')
-    parser.add_argument('lastname', help='Фамилия ученика')
+    parser.add_argument('last_name', help='Фамилия ученика')
     parser.add_argument('subject', help='Предмет для написания похвалы от учителя')
 
     args = parser.parse_args()
     return {'name': args.name,
-            'lastname': args.lastname,
+            'last_name': args.lastname,
             'subject': args.subject}
 
 
@@ -71,19 +74,19 @@ def main():
     arguments = get_arguments()
 
     name = arguments['name'].capitalize()
-    last_name = arguments['lastname'].capitalize()
+    last_name = arguments['last_name'].capitalize()
     subject = arguments['subject'].capitalize()
 
     try:
-        schookid = get_schoolkid(name, last_name)
-        fix_marks(schookid)
-        remove_chastisements(schookid)
-        create_commendation(schookid, subject)
+        schoolkid = get_schoolkid(name, last_name)
+        fix_marks(schoolkid)
+        remove_chastisements(schoolkid)
+        create_commendation(schoolkid, subject)
     except Schoolkid.MultipleObjectsReturned:
         print(f'Учеников с именем {name} {last_name} найдено больше одного!')
     except Schoolkid.DoesNotExist:
         print(f'Учеников с именем {name} {last_name} не найдено!')
-    except AttributeError:
+    except Lesson.DoesNotExist:
         print('Вы допустили опечатку в названии предмета!')
 
 
